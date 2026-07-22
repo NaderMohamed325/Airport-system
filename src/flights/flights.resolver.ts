@@ -1,8 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { FlightsService } from './flights.service';
 import { Flight } from './entities/flight.entity';
 import { CreateFlightInput } from './dto/create-flight.input';
 import { UpdateFlightInput } from './dto/update-flight.input';
+import { FlightPagination } from 'src/flights/entities/flight.pagination';
+import { PaginationInput } from 'src/utils/pagination.dto';
+import { FlightFilterInput } from 'src/flights/dto/gql/flight.filter.dto';
+import { FlightSortInput } from 'src/flights/dto/gql/flight.sort.dto';
 
 @Resolver(() => Flight)
 export class FlightsResolver {
@@ -13,9 +17,13 @@ export class FlightsResolver {
     return this.flightsService.create(createFlightInput);
   }
 
-  @Query(() => [Flight], { name: 'flights' })
-  findAll() {
-    return this.flightsService.findAll();
+  @Query(() => FlightPagination, { name: 'flights' })
+  findAll(
+    @Args('pagination') pagination: PaginationInput,
+    @Args('filter', { nullable: true }) filter?: FlightFilterInput,
+    @Args('sort', { nullable: true }) sort?: FlightSortInput,
+  ) {
+    return this.flightsService.findAll(pagination, filter, sort);
   }
 
   @Query(() => Flight, { name: 'flight' })
