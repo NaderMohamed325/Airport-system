@@ -10,6 +10,11 @@ import { StaffModule } from './staff/staff.module';
 import configuration from './config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { AuthModule } from './auth/auth.module';
+import { SeatsModule } from './seats/seats.module';
+import { PlanesModule } from './planes/planes.module';
+import { ReservationsModule } from './reservations/reservations.module';
+import { Request } from 'express';
 
 @Module({
   imports: [
@@ -18,6 +23,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       playground: true,
       autoSchemaFile: './src/schema.gql',
       sortSchema: true,
+      context: ({ req }: { req: Request }) => ({ req }),
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -38,6 +44,10 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     FlightsModule,
     PassengersModule,
     StaffModule,
+    AuthModule,
+    SeatsModule,
+    PlanesModule,
+    ReservationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

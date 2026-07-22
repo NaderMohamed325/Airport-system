@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { BeforeUpdate, Column, CreateDateColumn, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 import { Role } from '../enums/role.enum';
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 
@@ -22,7 +22,6 @@ export class User {
   email: string;
 
   @Column({ select: false })
-  @Field()
   password: string;
 
   @Column({ default: true })
@@ -35,5 +34,20 @@ export class User {
     enum: Role,
     default: Role.standard,
   })
-  roles: Role;
+  role: Role;
+
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
+  @UpdateDateColumn()
+  @Field()
+  updatedAt: Date;
+
+  @BeforeUpdate()
+  hashPassword() {
+    if (this.password) {
+      const bcrypt = require('bcrypt');
+      this.password = bcrypt.hashSync(this.password, 10);
+    }
+  }
 }

@@ -12,6 +12,24 @@ input CreateFlightInput {
 }
 
 input CreatePassengerInput {
+  email: String!
+  name: String!
+  nationality: String!
+  passportNumber: String!
+  password: String!
+}
+
+input CreatePlaneInput {
+  capacity: Int!
+  model: String!
+}
+
+input CreateReservationInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateSeatInput {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -75,12 +93,21 @@ enum FlightStatus {
 type Mutation {
   createFlight(createFlightInput: CreateFlightInput!): Flight!
   createPassenger(createPassengerInput: CreatePassengerInput!): Passenger!
+  createPlane(createPlaneInput: CreatePlaneInput!): Plane!
+  createReservation(createReservationInput: CreateReservationInput!): Reservation!
+  createSeat(createSeatInput: CreateSeatInput!): Seat!
   createStaff(createStaffInput: CreateStaffInput!): Staff!
   removeFlight(id: Int!): Flight!
   removePassenger(id: Int!): Passenger!
+  removePlane(id: Int!): Plane!
+  removeReservation(id: Int!): Reservation!
+  removeSeat(id: Int!): Seat!
   removeStaff(id: Int!): Staff!
   updateFlight(updateFlightInput: UpdateFlightInput!): Flight!
   updatePassenger(updatePassengerInput: UpdatePassengerInput!): Passenger!
+  updatePlane(updatePlaneInput: UpdatePlaneInput!): Plane!
+  updateReservation(updateReservationInput: UpdateReservationInput!): Reservation!
+  updateSeat(updateSeatInput: UpdateSeatInput!): Seat!
   updateStaff(updateStaffInput: UpdateStaffInput!): Staff!
 }
 
@@ -90,13 +117,25 @@ input PaginationInput {
 }
 
 type Passenger {
+  createdAt: DateTime!
   email: String!
   flights: [Flight!]!
   id: Float!
   isActive: Boolean!
   name: String!
-  password: String!
-  roles: Role!
+  nationality: String!
+  passportNumber: String!
+  role: Role!
+  updatedAt: DateTime!
+}
+
+type Plane {
+  capacity: Int!
+  createdAt: DateTime!
+  createdBy: Staff!
+  id: Int!
+  model: String!
+  updatedAt: DateTime!
 }
 
 type Query {
@@ -104,7 +143,18 @@ type Query {
   flights(filter: FlightFilterInput, pagination: PaginationInput!, sort: FlightSortInput): FlightPagination!
   passenger(id: Int!): Passenger!
   passengers: [Passenger!]!
+  plane(id: Int!): Plane!
+  planes: [Plane!]!
+  reservation(id: Int!): Reservation!
+  reservations: [Reservation!]!
+  seat(id: Int!): Seat!
+  seats: [Seat!]!
   staff(id: Int!): Staff!
+}
+
+type Reservation {
+  """Example field (placeholder)"""
+  exampleField: Int!
 }
 
 enum Role {
@@ -117,14 +167,33 @@ enum Role {
   standard
 }
 
+type Seat {
+  id: Int!
+  lockedAt: DateTime
+  seatNumber: String!
+  status: SeatStatusEnum!
+}
+
+"""The status of a seat"""
+enum SeatStatusEnum {
+  AVAILABLE
+  OCCUPIED
+  RESERVED
+}
+
 enum SortOrder {
   ASC
   DESC
 }
 
 type Staff {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  createdAt: DateTime!
+  email: String!
+  id: Float!
+  isActive: Boolean!
+  name: String!
+  role: Role!
+  updatedAt: DateTime!
 }
 
 input UpdateFlightInput {
@@ -138,6 +207,27 @@ input UpdateFlightInput {
 }
 
 input UpdatePassengerInput {
+  email: String
+  id: Int!
+  name: String
+  nationality: String
+  passportNumber: String
+  password: String
+}
+
+input UpdatePlaneInput {
+  capacity: Int
+  id: Int!
+  model: String
+}
+
+input UpdateReservationInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateSeatInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!
