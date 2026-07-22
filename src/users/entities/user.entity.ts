@@ -1,25 +1,35 @@
-import { Column, Entity, PrimaryGeneratedColumn, TableInheritance, Unique } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Role } from '../enums/role.enum';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 
-@Entity()
-@TableInheritance({ column: { type: 'varchar', name: 'type' } })
+registerEnumType(Role, {
+  name: 'Role',
+});
+
+@ObjectType()
 @Unique(['email'])
 export class User {
   @PrimaryGeneratedColumn()
+  @Field()
   id: number;
 
   @Column()
+  @Field()
   name: string;
 
   @Column()
+  @Field()
   email: string;
 
-  @Column()
+  @Column({ select: false })
+  @Field()
   password: string;
 
   @Column({ default: true })
+  @Field()
   isActive: boolean;
 
+  @Field(() => Role)
   @Column({
     type: 'enum',
     enum: Role,

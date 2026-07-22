@@ -1,0 +1,150 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateFlightInput {
+  airline: String!
+  arrival: String!
+  arrivalTime: DateTime!
+  availableSeats: Float!
+  departure: String!
+  departureTime: DateTime!
+}
+
+input CreatePassengerInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateStaffInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Flight {
+  airline: String!
+  arrival: String!
+  arrivalTime: DateTime!
+  availableSeats: Int!
+  departure: String!
+  departureTime: DateTime!
+  flightNumber: String!
+  id: Int!
+  status: FlightStatus!
+}
+
+input FlightFilterInput {
+  airline: String
+  arrival: String
+  departure: String
+  status: FlightStatus
+}
+
+type FlightPagination {
+  data: [Flight!]!
+  page: Float!
+  total: Float!
+  totalPages: Float!
+}
+
+enum FlightSortField {
+  AIRLINE
+  ARRIVAL_TIME
+  AVAILABLE_SEATS
+  DEPARTURE_TIME
+}
+
+input FlightSortInput {
+  order: SortOrder! = ASC
+  sortBy: FlightSortField! = DEPARTURE_TIME
+}
+
+enum FlightStatus {
+  CANCELLED
+  DELAYED
+  IN_AIR
+  LANDED
+  SCHEDULED
+}
+
+type Mutation {
+  createFlight(createFlightInput: CreateFlightInput!): Flight!
+  createPassenger(createPassengerInput: CreatePassengerInput!): Passenger!
+  createStaff(createStaffInput: CreateStaffInput!): Staff!
+  removeFlight(id: Int!): Flight!
+  removePassenger(id: Int!): Passenger!
+  removeStaff(id: Int!): Staff!
+  updateFlight(updateFlightInput: UpdateFlightInput!): Flight!
+  updatePassenger(updatePassengerInput: UpdatePassengerInput!): Passenger!
+  updateStaff(updateStaffInput: UpdateStaffInput!): Staff!
+}
+
+input PaginationInput {
+  limit: Int! = 10
+  page: Int! = 1
+}
+
+type Passenger {
+  email: String!
+  flights: [Flight!]!
+  id: Float!
+  isActive: Boolean!
+  name: String!
+  password: String!
+  roles: Role!
+}
+
+type Query {
+  flight(id: Int!): Flight!
+  flights(filter: FlightFilterInput, pagination: PaginationInput!, sort: FlightSortInput): FlightPagination!
+  passenger(id: Int!): Passenger!
+  passengers: [Passenger!]!
+  staff(id: Int!): Staff!
+}
+
+enum Role {
+  admin
+  crew
+  passenger
+  pilot
+  premium
+  security
+  standard
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+type Staff {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateFlightInput {
+  airline: String
+  arrival: String
+  arrivalTime: DateTime
+  availableSeats: Float
+  departure: String
+  departureTime: DateTime
+  id: Int!
+}
+
+input UpdatePassengerInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateStaffInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}

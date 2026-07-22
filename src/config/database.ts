@@ -13,7 +13,7 @@ export const dataSourceOptions: DataSourceOptions = {
   database: process.env.POSTGRES_DB,
   entities: [__dirname + '/../**/*.entity.{ts,js}'],
   synchronize: true,
-  dropSchema: true,
+  dropSchema: false,
 };
 
 // Create and export a new DataSource instance
