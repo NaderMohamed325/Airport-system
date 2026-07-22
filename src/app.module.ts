@@ -2,17 +2,23 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ScheduleModule } from '@nestjs/schedule';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FlightsModule } from './flights/flights.module';
 import { PassengersModule } from './passengers/passengers.module';
 import { StaffModule } from './staff/staff.module';
 import configuration from './config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      playground: true,
+      autoSchemaFile: './src/schema.gql',
+      sortSchema: true,
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
@@ -29,12 +35,9 @@ import configuration from './config';
       inject: [ConfigService],
     }),
     ScheduleModule.forRoot(),
-    AuthModule,
-    UsersModule,
     FlightsModule,
     PassengersModule,
     StaffModule,
-
   ],
   controllers: [AppController],
   providers: [AppService],
