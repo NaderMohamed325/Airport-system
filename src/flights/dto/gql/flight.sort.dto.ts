@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { FlightSortField, SortOrder } from 'src/flights/entities/flightStatus.enum';
+import { FlightSortField } from 'src/flights/entities/flightStatus.enum';
+import { SortOrder } from 'src/common/enums/sort-order.enum';
 import { IsEnum } from 'class-validator';
 
 @InputType()

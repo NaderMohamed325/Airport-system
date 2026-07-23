@@ -20,12 +20,3 @@ export enum FlightSortField {
 registerEnumType(FlightSortField, {
   name: 'FlightSortField',
 });
-
-export enum SortOrder {
-  ASC = 'ASC',
-  DESC = 'DESC',
-}
-
-registerEnumType(SortOrder, {
-  name: 'SortOrder',
-});

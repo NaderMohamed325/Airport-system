@@ -1,6 +1,8 @@
 import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Generated, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { FlightStatus } from './flightStatus.enum';
+import { Reservation } from 'src/reservations/entities/reservation.entity';
+import { Plane } from 'src/planes/entities/plane.entity';
 
 registerEnumType(FlightStatus, {
   name: 'FlightStatus',
@@ -49,4 +51,12 @@ export class Flight {
     default: FlightStatus.SCHEDULED,
   })
   status: FlightStatus;
+
+  @Field(() => Plane)
+  @ManyToOne(() => Plane, (plane) => plane.flights, { nullable: false })
+  plane: Plane;
+
+  @Field(() => [Reservation])
+  @OneToMany(() => Reservation, (reservation) => reservation.flight)
+  reservations: Reservation[];
 }

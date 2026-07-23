@@ -1,6 +1,7 @@
-import { InputType, Int, Field, GraphQLISODateTime } from '@nestjs/graphql';
+import { Field, GraphQLISODateTime, InputType, Int } from '@nestjs/graphql';
 
-import { IsString, IsInt, IsDateString, Min, IsDate } from 'class-validator';
+import { IsDate, IsInt, IsObject, IsString, Min } from 'class-validator';
+import { Plane } from 'src/planes/entities/plane.entity';
 
 @InputType()
 export class CreateFlightInput {
@@ -11,6 +12,10 @@ export class CreateFlightInput {
   @Field()
   @IsString()
   arrival: string;
+
+  @Field(() => Int)
+  @IsInt()
+  planeId: number;
 
   @Field(() => GraphQLISODateTime)
   @IsDate()
