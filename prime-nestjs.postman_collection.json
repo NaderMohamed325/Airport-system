@@ -1,0 +1,554 @@
+{
+  "info": {
+    "name": "Prime NestJS",
+    "description": "GraphQL API collection for Prime NestJS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "url",
+      "value": "http://localhost:3000/graphql"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Passenger",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RegisterPassenger($input: CreatePassengerInput!) {\n  registerPassenger(createPassengerInput: $input) {\n    createdAt\n    email\n    id\n    isActive\n    name\n    nationality\n    passportNumber\n    role\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"SecurePass123!\",\n    \"nationality\": \"American\",\n    \"passportNumber\": \"P12345678\"\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Login Passenger",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation LoginPassenger($input: LoginPassengerInput!) {\n  loginPassenger(loginPassengerInput: $input) {\n    accessToken\n    email\n    id\n    isActive\n    name\n    role\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"email\": \"john@example.com\",\n    \"password\": \"SecurePass123!\"\n  }\n}"
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "const jsonData = pm.response.json();",
+                    "if (jsonData.data?.loginPassenger?.accessToken) {",
+                    "  pm.collectionVariables.set('token', jsonData.data.loginPassenger.accessToken);",
+                    "}"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Register Staff",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RegisterStaff($input: CreateStaffInput!) {\n  registerStaff(createStaffInput: $input) {\n    createdAt\n    email\n    id\n    isActive\n    name\n    role\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"name\": \"Admin User\",\n    \"email\": \"admin@example.com\",\n    \"password\": \"AdminPass123!\",\n    \"role\": \"admin\"\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Login Staff",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation LoginStaff($input: LoginPassengerInput!) {\n  loginStaff(loginStaffInput: $input) {\n    accessToken\n    email\n    id\n    isActive\n    name\n    role\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"email\": \"admin@example.com\",\n    \"password\": \"AdminPass123!\"\n  }\n}"
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "const jsonData = pm.response.json();",
+                    "if (jsonData.data?.loginStaff?.accessToken) {",
+                    "  pm.collectionVariables.set('token', jsonData.data.loginStaff.accessToken);",
+                    "}"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Passengers",
+      "item": [
+        {
+          "name": "List Passengers",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ListPassengers($pagination: PaginationInput!, $filter: PassengerFilterInput, $sort: PassengerSortInput) {\n  passengers(pagination: $pagination, filter: $filter, sort: $sort) {\n    data {\n      createdAt\n      email\n      flights { id airline departure arrival }\n      id\n      isActive\n      name\n      nationality\n      passportNumber\n      role\n      updatedAt\n    }\n    total\n    page\n    totalPages\n  }\n}",
+                "variables": "{\n  \"pagination\": {\n    \"page\": 1,\n    \"limit\": 10\n  },\n  \"filter\": null,\n  \"sort\": { \"sortBy\": \"NAME\", \"order\": \"ASC\" }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Passenger By ID",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetPassenger($id: Int!) {\n  passenger(id: $id) {\n    createdAt\n    email\n    flights { id airline departure arrival }\n    id\n    isActive\n    name\n    nationality\n    passportNumber\n    role\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Passenger",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdatePassenger($input: UpdatePassengerInput!) {\n  updatePassenger(updatePassengerInput: $input) {\n    id\n    name\n    email\n    nationality\n    passportNumber\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"id\": 1,\n    \"name\": \"Jane Doe\",\n    \"nationality\": \"British\"\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Remove Passenger",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemovePassenger($id: Int!) {\n  removePassenger(id: $id) {\n    id\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flights",
+      "item": [
+        {
+          "name": "List Flights",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ListFlights($pagination: PaginationInput!, $filter: FlightFilterInput, $sort: FlightSortInput) {\n  flights(pagination: $pagination, filter: $filter, sort: $sort) {\n    data {\n      airline\n      arrival\n      arrivalTime\n      availableSeats\n      departure\n      departureTime\n      flightNumber\n      id\n      status\n    }\n    total\n    page\n    totalPages\n  }\n}",
+                "variables": "{\n  \"pagination\": {\n    \"page\": 1,\n    \"limit\": 10\n  },\n  \"filter\": null,\n  \"sort\": { \"sortBy\": \"DEPARTURE_TIME\", \"order\": \"ASC\" }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Flight By ID",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetFlight($id: Int!) {\n  flight(id: $id) {\n    airline\n    arrival\n    arrivalTime\n    availableSeats\n    departure\n    departureTime\n    flightNumber\n    id\n    status\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Create Flight",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateFlight($input: CreateFlightInput!) {\n  createFlight(createFlightInput: $input) {\n    airline\n    arrival\n    arrivalTime\n    availableSeats\n    departure\n    departureTime\n    flightNumber\n    id\n    status\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"airline\": \"Delta\",\n    \"arrival\": \"JFK\",\n    \"arrivalTime\": \"2026-07-24T15:30:00Z\",\n    \"availableSeats\": 150,\n    \"departure\": \"LAX\",\n    \"departureTime\": \"2026-07-24T10:00:00Z\",\n    \"planeId\": 1\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Flight",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateFlight($input: UpdateFlightInput!) {\n  updateFlight(updateFlightInput: $input) {\n    id\n    airline\n    departure\n    arrival\n    status\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"id\": 1,\n    \"status\": \"DELAYED\"\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Remove Flight",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveFlight($id: Int!) {\n  removeFlight(id: $id) {\n    id\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Planes",
+      "item": [
+        {
+          "name": "List Planes",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ListPlanes($pagination: PaginationInput!, $filter: PlaneFilterInput, $sort: PlaneSortInput) {\n  planes(pagination: $pagination, filter: $filter, sort: $sort) {\n    data {\n      capacity\n      createdAt\n      id\n      model\n      updatedAt\n    }\n    total\n    page\n    totalPages\n  }\n}",
+                "variables": "{\n  \"pagination\": {\n    \"page\": 1,\n    \"limit\": 10\n  },\n  \"filter\": null,\n  \"sort\": { \"sortBy\": \"CREATED_AT\", \"order\": \"DESC\" }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Plane By ID",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetPlane($id: Int!) {\n  plane(id: $id) {\n    capacity\n    createdAt\n    id\n    model\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Create Plane",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreatePlane($input: CreatePlaneInput!) {\n  createPlane(createPlaneInput: $input) {\n    capacity\n    createdAt\n    id\n    model\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"capacity\": 90,\n    \"model\": \"Boeing 737\"\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Plane",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdatePlane($input: UpdatePlaneInput!) {\n  updatePlane(updatePlaneInput: $input) {\n    id\n    model\n    capacity\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"id\": 1,\n    \"capacity\": 120\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Remove Plane",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemovePlane($id: Int!) {\n  removePlane(id: $id) {\n    id\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seats",
+      "item": [
+        {
+          "name": "List Seats",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ListSeats($pagination: PaginationInput!, $filter: SeatFilterInput, $sort: SeatSortInput) {\n  seats(pagination: $pagination, filter: $filter, sort: $sort) {\n    data {\n      id\n      seatNumber\n      status\n      lockedAt\n    }\n    total\n    page\n    totalPages\n  }\n}",
+                "variables": "{\n  \"pagination\": {\n    \"page\": 1,\n    \"limit\": 10\n  },\n  \"filter\": null,\n  \"sort\": { \"sortBy\": \"SEAT_NUMBER\", \"order\": \"ASC\" }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Seat By ID",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetSeat($id: Int!) {\n  seat(id: $id) {\n    id\n    seatNumber\n    status\n    lockedAt\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "List Reservations",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ListReservations($pagination: PaginationInput!, $filter: ReservationFilterInput, $sort: ReservationSortInput) {\n  reservations(pagination: $pagination, filter: $filter, sort: $sort) {\n    data {\n      id\n      createdAt\n      updatedAt\n    }\n    total\n    page\n    totalPages\n  }\n}",
+                "variables": "{\n  \"pagination\": {\n    \"page\": 1,\n    \"limit\": 10\n  },\n  \"filter\": null,\n  \"sort\": { \"sortBy\": \"CREATED_AT\", \"order\": \"DESC\" }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Reservation By ID",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetReservation($id: Int!) {\n  reservation(id: $id) {\n    id\n    createdAt\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Create Reservation",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateReservation($input: CreateReservationInput!) {\n  createReservation(createReservationInput: $input) {\n    id\n    createdAt\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"flightId\": 1,\n    \"passengerId\": 1,\n    \"seatId\": 1\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Reservation",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateReservation($input: UpdateReservationInput!) {\n  updateReservation(updateReservationInput: $input) {\n    id\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"id\": 1,\n    \"seatId\": 2\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Remove Reservation",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveReservation($id: Int!) {\n  removeReservation(id: $id) {\n    id\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Staff",
+      "item": [
+        {
+          "name": "List Staff",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query ListStaff($pagination: PaginationInput!, $filter: StaffFilterInput, $sort: StaffSortInput) {\n  staffMembers(pagination: $pagination, filter: $filter, sort: $sort) {\n    data {\n      createdAt\n      email\n      id\n      isActive\n      name\n      role\n      updatedAt\n    }\n    total\n    page\n    totalPages\n  }\n}",
+                "variables": "{\n  \"pagination\": {\n    \"page\": 1,\n    \"limit\": 10\n  },\n  \"filter\": null,\n  \"sort\": { \"sortBy\": \"NAME\", \"order\": \"ASC\" }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Staff By ID",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query GetStaff($id: Int!) {\n  staff(id: $id) {\n    createdAt\n    email\n    id\n    isActive\n    name\n    role\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "My Staff Profile",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query MyStaffProfile {\n  getMyStaffProfile {\n    id\n    name\n    email\n    role\n    isActive\n    createdAt\n    updatedAt\n  }\n}",
+                "variables": ""
+              }
+            }
+          }
+        },
+        {
+          "name": "Create Staff",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateStaff($input: CreateStaffInput!) {\n  createStaff(createStaffInput: $input) {\n    createdAt\n    email\n    id\n    isActive\n    name\n    role\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"name\": \"New Staff\",\n    \"email\": \"staff@example.com\",\n    \"password\": \"StaffPass123!\",\n    \"role\": \"crew\"\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Staff",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateStaff($input: UpdateStaffInput!) {\n  updateStaff(updateStaffInput: $input) {\n    id\n    name\n    role\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"id\": 1,\n    \"role\": \"admin\"\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Remove Staff",
+          "request": {
+            "url": "{{url}}",
+            "method": "POST",
+            "headers": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation RemoveStaff($id: Int!) {\n  removeStaff(id: $id) {\n    id\n  }\n}",
+                "variables": "{\n  \"id\": 1\n}"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
