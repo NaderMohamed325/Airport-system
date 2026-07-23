@@ -24,6 +24,12 @@ import { Request } from 'express';
       autoSchemaFile: './src/schema.gql',
       sortSchema: true,
       context: ({ req }: { req: Request }) => ({ req }),
+      formatError(formattedError, error) {
+        if (formattedError.extensions?.code === 'INTERNAL_SERVER_ERROR' && process.env.NODE_ENV === 'production') {
+          return new Error('Internal server error');
+        }
+        return formattedError;
+      },
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -50,6 +56,12 @@ import { Request } from 'express';
     ReservationsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'APP_FILTER',
+      useClass: require('./utils/gql.filter').GraphQLExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
