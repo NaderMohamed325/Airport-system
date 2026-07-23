@@ -1,6 +1,7 @@
-import { BeforeUpdate, Column, CreateDateColumn, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Role } from '../enums/role.enum';
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { AuditEntity } from 'src/utils/audit.entity';
 
 registerEnumType(Role, {
   name: 'Role',
@@ -8,7 +9,7 @@ registerEnumType(Role, {
 
 @ObjectType()
 @Unique(['email'])
-export class User {
+export class User extends AuditEntity {
   @PrimaryGeneratedColumn()
   @Field()
   id: number;
@@ -35,19 +36,4 @@ export class User {
     default: Role.standard,
   })
   role: Role;
-
-  @CreateDateColumn()
-  @Field()
-  createdAt: Date;
-  @UpdateDateColumn()
-  @Field()
-  updatedAt: Date;
-
-  @BeforeUpdate()
-  hashPassword() {
-    if (this.password) {
-      const bcrypt = require('bcrypt');
-      this.password = bcrypt.hashSync(this.password, 10);
-    }
-  }
 }
