@@ -1,20 +1,18 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { Role } from 'src/users/enums/role.enum';
 
 @InputType()
-export class CreateStaffInput {
-  @Field(() => String)
+export class StaffFilterInput {
+  @Field({ nullable: true })
+  @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
-  @Field(() => String)
+  @Field({ nullable: true })
+  @IsOptional()
   @IsEmail()
-  email: string;
-
-  @Field()
-  @IsString()
-  password: string;
+  email?: string;
 
   @Field(() => Role, { nullable: true })
   @IsOptional()
