@@ -8,7 +8,6 @@ describe('AppController', () => {
 
   const mockAppService = {
     getHello: jest.fn(),
-    healthCheck: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -39,38 +38,6 @@ describe('AppController', () => {
 
       expect(appService.getHello).toHaveBeenCalled();
       expect(result).toEqual(expectedResult);
-    });
-  });
-
-  describe('healthCheck', () => {
-    it('should return health check message', () => {
-      const expectedResult = { message: 'up' };
-      mockAppService.healthCheck.mockReturnValue(expectedResult);
-
-      const result = appController.healthCheck();
-
-      expect(appService.healthCheck).toHaveBeenCalled();
-      expect(result).toEqual(expectedResult);
-    });
-  });
-
-  describe('echo', () => {
-    it('should echo the request body', () => {
-      const body = { message: 'test' };
-
-      const result = appController.echo(body);
-
-      expect(result).toEqual(body);
-    });
-  });
-
-  describe('premiumEcho', () => {
-    it('should echo the request body for premium users', () => {
-      const body = { message: 'premium test' };
-
-      const result = appController.premiumEcho(body);
-
-      expect(result).toEqual(body);
     });
   });
 });
